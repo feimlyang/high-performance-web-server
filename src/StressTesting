@@ -1,0 +1,38 @@
+Stress testing parameter settings:
+threads = 1000
+seconds = 30
+timeout = 5
+
+./stress localhost 10050 1 1000 30 5
+
+1. Basic multi threaded server
+
+|--------------------------------------|
+|   Golang : Server Stress Test Tool   |
+|          C0d3d By Lee0n123           |
+|--------------------------------------|
+Total Sent: 410926 requests
+RPS: 13697.53 requests/s
+Successed Rate: 3.62%
+Dropped: 395979
+Connection Error: 996 times
+
+|--------------------------------------|
+|   Golang : Server Stress Test Tool   |
+|          C0d3d By Lee0n123           |
+|--------------------------------------|
+Total Sent: 312265 requests
+RPS: 10408.83 requests/s
+Successed Rate: 3.65%
+Dropped: 300819
+Connection Error: 998 times
+
+|--------------------------------------|
+|   Golang : Server Stress Test Tool   |
+|          C0d3d By Lee0n123           |
+|--------------------------------------|
+Total Sent: 332383 requests
+RPS: 11079.43 requests/s
+Successed Rate: 3.61%
+Dropped: 320222
+Connection Error: 995 times

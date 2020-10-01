@@ -3,7 +3,6 @@ package com.myserver;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ThreadedEchoServer {
 
@@ -20,23 +19,18 @@ public class ThreadedEchoServer {
             try (InputStream inStream = incoming.getInputStream();
                  OutputStream outStream = incoming.getOutputStream()) {
                 //read from client
-                Scanner in = new Scanner(inStream, "UTF-8");
+                byte[] data = new byte[1024];
+                int bytesRead = inStream.read(data);
+                System.out.println(new String(data));
 
                 //send response
                 PrintWriter out = new PrintWriter(
                         new OutputStreamWriter(outStream, "UTF-8"),
                         true);
-                out.println("HI, Enter BYE to exit");
-
                 //echo the message
-                boolean done = false;
-                while (!done && in.hasNextLine()){
-                    String line = in.nextLine();
-                    out.println("Echo: " + line);
-                    if (line.trim().equals("BYE")){
-                        done = true;
-                    }
-                }
+                out.println("http test");
+                out.println("Echo: " + bytesRead + " bytes\n content: " + new String(data));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
