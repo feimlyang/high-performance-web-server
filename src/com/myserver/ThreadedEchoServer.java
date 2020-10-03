@@ -16,27 +16,10 @@ public class ThreadedEchoServer {
 
         @Override
         public void run() {
-            try (InputStream inStream = incoming.getInputStream();
-                 OutputStream outStream = incoming.getOutputStream()) {
-                //read from client
-                byte[] data = new byte[1024];
-                int bytesRead = inStream.read(data);
-                System.out.println(new String(data));
-
-                //send response
-                PrintWriter out = new PrintWriter(
-                        new OutputStreamWriter(outStream, "UTF-8"),
-                        true);
-                //echo the message
-                out.println("http test");
-                out.println("Echo: " + bytesRead + " bytes\n content: " + new String(data));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            EchoService echoService = new EchoService();
+            echoService.Echo(incoming);
         }
     }
-
 
     //make multi threads
     public void runThreadedEchoHandler() {

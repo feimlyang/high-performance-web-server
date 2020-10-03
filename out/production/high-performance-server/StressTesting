@@ -1,0 +1,3 @@
+Stress testing:
+./go-stress-testing-mac -c 300 -n 5 -u 'http://localhost:10050'
+
