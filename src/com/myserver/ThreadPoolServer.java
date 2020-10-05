@@ -1,13 +1,12 @@
 package com.myserver;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
-public class ThreadPoolEchoServer {
+public class ThreadPoolServer {
 
     class Handler implements Runnable {
         private Socket incoming;
@@ -18,8 +17,29 @@ public class ThreadPoolEchoServer {
 
         @Override
         public void run() {
-            EchoService echoService = new EchoService();
-            echoService.Echo(incoming);
+
+            try (InputStream inStream = incoming.getInputStream();
+                 OutputStream outStream = incoming.getOutputStream()) {
+                //read from client
+                byte[] data = new byte[1024];
+                int bytesRead = inStream.read(data);
+                //send response
+                PrintWriter out = new PrintWriter(
+                        new OutputStreamWriter(outStream, "UTF-8"),
+                        true);
+                //echo the HTTP response:
+                //HEADER
+                out.println("HTTP/1.1 200 OK");
+                out.println("Content-Type: text/plain");
+                out.println();
+                //BODY
+                out.println("echo back " + bytesRead + " bytes\n content: " + new String(data));
+                inStream.close();
+                outStream.close();
+                incoming.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -45,13 +65,19 @@ public class ThreadPoolEchoServer {
         }
     }
 
-    public void runThreadPoolServer() {
+    public void start() {
         try {
             Runnable networkService = new NetworkService(10050, Runtime.getRuntime().availableProcessors());
             Thread t = new Thread(networkService);
             t.start();
+            System.out.println("--- Thread Pool Server is running---");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        ThreadPoolServer threadPoolServer = new ThreadPoolServer();
+        threadPoolServer.start();
     }
 }

@@ -1,9 +1,7 @@
 Stress testing:
 ./go-stress-testing-mac -c 500 -n 50 -u 'http://localhost:10050'
 
-multi threads:
-
-
+----- Threaded Server -----
  开始启动  并发数:500 请求数:50 请求参数:
 request:
  form:http
@@ -86,8 +84,7 @@ request:
 
 
 
-
-thread pool:
+----- Threaded Pool Sever -----
 
  开始启动  并发数:500 请求数:50 请求参数:
 request:
@@ -124,5 +121,84 @@ request:
 处理协程数量: 500
 请求总数（并发数*请求数 -c * -n）: 25000 总请求时间: 13.637 秒 successNum: 25000 failureNum: 0
 *************************  结果 end   ****************************
+
+
+----- NIO server -----
+
+ 开始启动  并发数:500 请求数:50 请求参数:
+request:
+ form:http
+ url:http://localhost:10050
+ method:GET
+ headers:map[]
+ data:
+ verify:statusCode
+ timeout:30s
+ debug:false
+
+
+
+─────┬───────┬───────┬───────┬────────┬────────┬────────┬────────┬────────
+ 耗时│ 并发数│ 成功数│ 失败数│   qps  │最长耗时│最短耗时│平均耗时│ 错误码
+─────┼───────┼───────┼───────┼────────┼────────┼────────┼────────┼────────
+   1s│    500│   1876│      0│ 2491.52│  524.34│   18.41│    0.40│200:1876
+   2s│    500│   4021│      0│ 2383.24│  524.34│   18.41│    0.42│200:4021
+   3s│    500│   6040│      0│ 2317.23│  524.34│   18.41│    0.43│200:6040
+   4s│    500│   8521│      0│ 2391.64│  524.34│   18.41│    0.42│200:8521
+   5s│    500│   9985│      0│ 2200.15│  705.23│   18.41│    0.45│200:9985
+   6s│    500│  11996│      0│ 2194.00│  705.23│   18.41│    0.46│200:11996
+   7s│    500│  14501│      0│ 2257.60│  705.23│   18.41│    0.44│200:14501
+   8s│    500│  17095│      0│ 2325.88│  705.23│    4.22│    0.43│200:17095
+   9s│    500│  20128│      0│ 2417.63│  705.23│    0.47│    0.41│200:20128
+  10s│    500│  23264│      0│ 2504.22│  705.23│    0.47│    0.40│200:23264
+  11s│    500│  24669│      0│ 2512.55│  705.23│    0.28│    0.40│200:24669
+  19s│    500│  24882│      0│ 2511.24│  705.23│    0.28│    0.40│200:24882
+  19s│    500│  24907│      0│ 2440.77│ 7569.87│    0.28│    0.41│200:24907
+  20s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  21s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  22s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  23s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  24s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  25s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  26s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  27s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  28s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  29s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  30s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  31s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  32s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  33s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  34s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  35s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  36s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  37s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  38s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+  39s│    500│  24909│      0│ 2440.67│ 7569.87│    0.28│    0.41│200:24909
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+  47s│    500│  24909│      1│ 2426.41│30004.15│    0.28│    0.41│200:24909;509:1
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": dial tcp [::1]:10050: i/o timeout (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+请求失败: Get "http://localhost:10050": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+  47s│    500│  24984│     16│ 2192.43│37174.17│    0.28│    0.46│200:24984;509:16
+
+
+*************************  结果 stat  ****************************
+处理协程数量: 500
+请求总数（并发数*请求数 -c * -n）: 25000 总请求时间: 46.675 秒 successNum: 24984 failureNum: 16
+*************************  结果 end   ****************************
+
+
 
 
