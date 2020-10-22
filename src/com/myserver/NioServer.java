@@ -3,6 +3,7 @@ package com.myserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -59,21 +60,36 @@ public class NioServer {
 
     private void readHandler(SelectionKey selectionKey, Selector selector) throws IOException {
         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        String request = "";
-        //read data from channel
-        while (socketChannel.read(byteBuffer) > 0){
-            byteBuffer.flip();
-            request += Charset.forName("UTF-8").decode(byteBuffer);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(10);
 
-//            if (request.length() > 0){
-//                System.out.println("request: " + request);
-//            }
+        //read data from channel
+        HttpParser httpParser = new HttpParser();
+        boolean isParseEnd = false;
+        while (socketChannel.read(byteBuffer) > 0 && !isParseEnd){
+            byteBuffer.flip();
+            String request = "";
+            request += Charset.forName("UTF-8").decode(byteBuffer);
+            try{
+                isParseEnd = httpParser.parse(request);
+            }
+            catch (Exception httpParseException){
+                socketChannel.close();
+                httpParseException.printStackTrace();
+                return;
+            }
+            byteBuffer.clear();
         }
 
-        socketChannel.register(selector, SelectionKey.OP_WRITE);
-        selectionKey.attach(ByteBuffer.wrap(request.getBytes(StandardCharsets.UTF_8)));
+        String response = httpParser.protocol + " 200 OK\r\n" +
+                "Content-Type: text/html\r\n\r\n" +
+                "<html>\n" +
+                "<body>\n" +
+                "<p>" + httpParser.body + "</p>\n" +
+                "</body>\n" +
+                "</html>";
 
+        socketChannel.register(selector, SelectionKey.OP_WRITE);
+        selectionKey.attach(ByteBuffer.wrap(response.getBytes()));
     }
 
     private void writeHandler(SelectionKey selectionKey, Selector selector) throws IOException {
@@ -83,7 +99,7 @@ public class NioServer {
             byteBuffer.rewind();
         }
         //http response
-        socketChannel.write(Charset.forName("UTF-8").encode("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{\"status\":\"ok\"}"));
+        socketChannel.write(byteBuffer);
         selectionKey.channel().close();
     }
 
