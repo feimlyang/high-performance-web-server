@@ -31,6 +31,7 @@ public class HttpParser {
     //interrupt immediately if not http request
     public boolean parse(String request) throws Exception {
         char[] requestArray = request.toCharArray();
+        System.out.print(requestArray);
         for (char ch : requestArray) {
             switch (currentState) {
                 case METHOD: {
@@ -83,7 +84,8 @@ public class HttpParser {
                 case HEADERS_END: {
                     if (ch == '\n') {
                         currentState = State.BODY;
-                        bodyCounter = Integer.parseInt(headers.get("Content-Length"));
+                        if (headers.containsKey("Content-Length")) bodyCounter = Integer.parseInt(headers.get("Content-Length"));
+                        else bodyCounter = 0;
                     } else new Exception("Invalid");
                     break;
                 }
