@@ -8,14 +8,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 
-public class SSLBioServer {
+public class HttpsBioServer {
     private static String KEYSTORE = "/Users/manlin/GitHub/high-performance-server/mykey.keystore.new";
     private static String KEYSTORE_PASSWORD = "mypassword";
     private SSLContext sslContext;
 
-    public SSLBioServer() throws Exception {
+    public HttpsBioServer() throws Exception {
         System.setProperty("javax.net.ssl.trustStore", KEYSTORE);
         sslContext = SSLContext.getInstance("TLSv1.2");
         KeyStore ks = KeyStore.getInstance("JKS");
@@ -81,12 +80,12 @@ public class SSLBioServer {
         ServerSocketFactory factory = sslContext.getServerSocketFactory();
         ServerSocket serverSocket = factory.createServerSocket(10050);
         ((SSLServerSocket) serverSocket).setNeedClientAuth(false);
-        System.out.println("--- Basic Threaded Server is running---");
+        System.out.println("--- BIO HTTPS Server is running---");
         int i = 1;
         while (true) {
             Socket incoming = serverSocket.accept();
             //create new thread
-            Runnable r = new SSLBioServer.ThreadedEchoHandler(incoming);
+            Runnable r = new HttpsBioServer.ThreadedEchoHandler(incoming);
             Thread t = new Thread(r);
             t.start();
             i++;
@@ -95,8 +94,8 @@ public class SSLBioServer {
 
     public static void main(String[] args) {
         try{
-            SSLBioServer sslBioServer = new SSLBioServer();
-            sslBioServer.start();
+            HttpsBioServer httpsBioServer = new HttpsBioServer();
+            httpsBioServer.start();
         }
         catch (Exception e){
             e.printStackTrace();
