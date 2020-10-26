@@ -27,7 +27,6 @@ public class ThreadPoolServer {
                 PrintWriter out = new PrintWriter(
                         new OutputStreamWriter(outStream, "UTF-8"),
                         true);
-                //echo the HTTP response:
                 //HEADER
                 out.println("HTTP/1.1 200 OK");
                 out.println("Content-Type: text/plain");

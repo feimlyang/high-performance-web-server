@@ -52,7 +52,6 @@ public class HttpsBioServer {
                 PrintWriter out = new PrintWriter(
                         new OutputStreamWriter(outStream, "UTF-8"),
                         true);
-                //echo the HTTP response:
                 out.println(
                         httpParser.protocol + " 200 OK\r\n" +
                                 "Content-Type: text/html\r\n\r\n" +

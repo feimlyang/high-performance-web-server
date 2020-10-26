@@ -84,6 +84,7 @@ public class NioServer {
                 "Content-Type: text/html\r\n\r\n" +
                 "<html>\n" +
                 "<body>\n" +
+                "看到的都是缘分" +
                 "<p>" + httpParser.body + "</p>\n" +
                 "</body>\n" +
                 "</html>";
@@ -92,15 +93,16 @@ public class NioServer {
         selectionKey.attach(ByteBuffer.wrap(response.getBytes()));
     }
 
+
     private void writeHandler(SelectionKey selectionKey, Selector selector) throws IOException {
         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-        ByteBuffer byteBuffer = (ByteBuffer) selectionKey.attachment(); //request from browser
+        ByteBuffer byteBuffer = (ByteBuffer) selectionKey.attachment();
         if (!byteBuffer.hasRemaining()){
             byteBuffer.rewind();
         }
-        //http response
         socketChannel.write(byteBuffer);
         selectionKey.channel().close();
+
     }
 
     public static void main(String[] args) throws IOException {
